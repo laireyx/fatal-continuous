@@ -8,11 +8,11 @@ import floorStart from '../assets/floor-start.png';
 const TemplateImages: Record<string, { url: string; roi: RoiCallback }> = {
   continuous: {
     url: continous,
-    roi: (size) => [size.width / 2, 0, size.width / 2, 32 * 5],
+    roi: (size) => [size.width / 2, 96, size.width / 2, 32 * 5],
   },
   fatalStrike: {
     url: fatalStrike,
-    roi: (size) => [size.width / 2, 0, size.width / 2, 32 * 5],
+    roi: (size) => [size.width / 2, 96, size.width / 2, 32 * 5],
   },
 
   floorStart: {
