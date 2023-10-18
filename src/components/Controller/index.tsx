@@ -24,7 +24,7 @@ function togglePip() {
   }
 }
 
-function ButtonMenu() {
+function Controller() {
   const [isCapturing, setIsCapturing] = useState(false);
 
   const detector = useDetector();
@@ -108,4 +108,4 @@ function ButtonMenu() {
   );
 }
 
-export default ButtonMenu;
+export default Controller;
