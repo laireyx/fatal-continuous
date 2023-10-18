@@ -9,6 +9,7 @@ export type RoiCallback = (
 type DetectTemplate = {
   template: cv.Mat;
   roi: RoiCallback;
+  detectAll: boolean;
 };
 
 type DetectedItem = {
@@ -22,13 +23,18 @@ export default class Detector {
   private templates: Map<string, DetectTemplate> = new Map();
 
   capture = new Capture();
-  threshold = 0.75;
+  threshold = 0.8;
 
   startCapture() {
     return this.capture.initialize();
   }
 
-  async loadTemplateMatrix(key: string, url: string, roi: RoiCallback) {
+  async loadTemplateMatrix(
+    key: string,
+    url: string,
+    roi: RoiCallback,
+    detectAll: boolean,
+  ) {
     function loadImage(url: string) {
       const img = new Image();
 
@@ -59,6 +65,7 @@ export default class Detector {
     this.templates.set(key, {
       template: await loadImage(url),
       roi,
+      detectAll,
     });
   }
 
@@ -70,7 +77,10 @@ export default class Detector {
 
     let prevRoiRect: cv.Rect = new cv.Rect();
 
-    for (const [key, { template, roi }] of this.templates.entries()) {
+    for (const [
+      key,
+      { template, roi, detectAll },
+    ] of this.templates.entries()) {
       const roiRect = new cv.Rect(
         ...(roi(shot.size()) ?? [0, 0, shot.cols, shot.rows]),
       );
@@ -103,6 +113,8 @@ export default class Detector {
       while (maxVal > this.threshold) {
         dst.floatPtr(maxLoc.y, maxLoc.x)[0] = 0;
         matchCount++;
+
+        if (!detectAll) break;
         ({ maxVal, maxLoc } = cv.minMaxLoc(dst));
       }
 
