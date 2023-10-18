@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { faClose } from '@fortawesome/free-solid-svg-icons/faClose';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useUi } from '@store/ui';
 import { useWalkthrough } from '@store/walkthrough';
 
 import {
-  closeBtn,
+  icon,
   contentWrapper,
   floorDial,
   floorItem,
@@ -16,11 +17,12 @@ import {
   floorItemSelected,
   memoArea,
   dialWrapper,
+  iconWrapper,
 } from './index.css';
 
 export default function MemoDialog() {
   const { memoOpen, setMemoOpen } = useUi();
-  const { floorMemo, setFloorMemo } = useWalkthrough();
+  const { floorMemo, setFloorMemo, save } = useWalkthrough();
 
   const [selectedFloor, setSelectedFloor] = useState(0);
   const [writing, setWriting] = useState('');
@@ -28,10 +30,10 @@ export default function MemoDialog() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const dialRef = useRef<HTMLDivElement>(null);
 
-  const commitMemo = useCallback(
-    () => setFloorMemo(selectedFloor, writing.split('\n')),
-    [setFloorMemo, selectedFloor, writing],
-  );
+  const commitMemo = useCallback(() => {
+    setFloorMemo(selectedFloor, writing.split('\n'));
+    save();
+  }, [setFloorMemo, save, selectedFloor, writing]);
 
   const changeFloor = useCallback(
     (toFloor: number) => {
@@ -46,6 +48,13 @@ export default function MemoDialog() {
     },
     [commitMemo, setSelectedFloor],
   );
+
+  const refreshMemo = useCallback(() => {
+    for (let i = 0; i <= 100; i++) {
+      setFloorMemo(i, []);
+    }
+    save();
+  }, [setFloorMemo, save]);
 
   const closeMemo = useCallback(() => {
     commitMemo();
@@ -72,11 +81,18 @@ export default function MemoDialog() {
       onClose={() => setMemoOpen(false)}
     >
       <div className={`${contentWrapper}`}>
-        <FontAwesomeIcon
-          icon={faClose}
-          className={`${closeBtn}`}
-          onClick={closeMemo}
-        />
+        <div className={`${iconWrapper}`}>
+          <FontAwesomeIcon
+            icon={faTrashAlt}
+            className={`${icon}`}
+            onClick={refreshMemo}
+          />
+          <FontAwesomeIcon
+            icon={faClose}
+            className={`${icon}`}
+            onClick={closeMemo}
+          />
+        </div>
         <div className={`${memoEditor}`}>
           <div className={`${dialWrapper}`}>
             <div className={`${floorDial}`} ref={dialRef}>

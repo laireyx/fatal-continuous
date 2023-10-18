@@ -12,9 +12,11 @@ export const contentWrapper = style({
   gap: vars.space.medium,
 });
 
-export const closeBtn = style({
+export const iconWrapper = style({
   alignSelf: 'flex-end',
+});
 
+export const icon = style({
   width: vars.sizing.icon,
   height: vars.sizing.icon,
 });

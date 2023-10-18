@@ -1,3 +1,4 @@
+import localforage from 'localforage';
 import { create } from 'zustand';
 
 type PlayState = 'start' | 'attacking' | 'end';
@@ -14,6 +15,7 @@ interface WalkthroughStore {
 
   floorMemo: string[][];
 
+  save: () => void;
   setFloorMemo: (floor: number, memo: string[]) => void;
 
   floorStart: () => void;
@@ -23,7 +25,7 @@ interface WalkthroughStore {
   fatalStrikeActivated: () => void;
 }
 
-export const useWalkthrough = create<WalkthroughStore>((set, get) => ({
+const useWalkthrough = create<WalkthroughStore>((set, get) => ({
   floor: 0,
   state: 'end',
 
@@ -33,6 +35,11 @@ export const useWalkthrough = create<WalkthroughStore>((set, get) => ({
   fatalStrike: -1,
 
   floorMemo: new Array(101).fill(0).map(() => []),
+
+  save: () => {
+    const { floorMemo } = get();
+    localforage.setItem('walkthrough', floorMemo);
+  },
 
   setFloorMemo: (floor: number, memo: string[]) => {
     const { floorMemo: oldMemo } = get();
@@ -73,6 +80,15 @@ export const useWalkthrough = create<WalkthroughStore>((set, get) => ({
     }
   },
 }));
+
+(async function () {
+  const floorMemo =
+    await localforage.getItem<WalkthroughStore['floorMemo']>('walkthrough');
+
+  if (floorMemo) useWalkthrough.setState({ floorMemo });
+})();
+
+export { useWalkthrough };
 
 export const selectWalkthroughHooks = ({
   floorStart,
