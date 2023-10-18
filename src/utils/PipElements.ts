@@ -28,6 +28,15 @@ class PipElements {
     this.resize(canvas.width, canvas.height);
     this.ctx.transferFromImageBitmap(canvas.transferToImageBitmap());
   }
+
+  togglePip() {
+    if (document.pictureInPictureElement) {
+      document.exitPictureInPicture();
+    } else {
+      this.video.play();
+      this.video.requestPictureInPicture();
+    }
+  }
 }
 
 const pipElements = new PipElements();
