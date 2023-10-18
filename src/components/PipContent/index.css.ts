@@ -48,6 +48,5 @@ export const memoBox = style({
 
 export const memoItem = style({
   fontWeight: 'bold',
-  fontFamily: 'sans-serif',
   fontSize: vars.sizing.memo,
 });

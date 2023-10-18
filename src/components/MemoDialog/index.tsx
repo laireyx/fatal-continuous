@@ -104,7 +104,11 @@ export default function MemoDialog() {
                   key={floor}
                   onClick={() => changeFloor(floor)}
                 >
-                  <span>{floor}층</span>
+                  <span>
+                    {floor}층
+                    {floorMemo[floor].filter((memoLine) => memoLine.length > 0)
+                      .length > 0 && '*'}
+                  </span>
                 </div>
               ))}
             </div>
