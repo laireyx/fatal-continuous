@@ -23,7 +23,7 @@ export default class Detector {
   private templates: Map<string, DetectTemplate> = new Map();
 
   capture = new Capture();
-  threshold = 0.8;
+  threshold = 0.7;
 
   startCapture() {
     return this.capture.initialize();
