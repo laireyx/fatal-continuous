@@ -16,3 +16,7 @@ export const cooldownText = style({
 
   minWidth: '2ch',
 });
+
+export const cooldownTextImminent = style({
+  color: 'red',
+});
