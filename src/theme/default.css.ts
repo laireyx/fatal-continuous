@@ -4,9 +4,11 @@ export const [themeClass, vars] = createTheme({
   color: {
     text: '#213547',
     primary: '#213547',
+    secondary: '#162430',
     white: 'white',
 
-    memoBg: '#f0f0f0',
+    boxBg: '#f0f0f0',
+    darkBoxBg: '#a1a1a1',
     buttonBg: '#d9d9d9',
     iconBg: '#f0f0f0',
   },

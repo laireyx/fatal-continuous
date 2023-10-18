@@ -14,6 +14,7 @@ import {
   memoItem,
   cooldownBox,
   boxHeader,
+  cooldownBoxBlink,
 } from './index.css';
 import continuousIcon from '../../assets/continuous.png';
 import fatalStrikeIcon from '../../assets/fatal-strike.png';
@@ -45,14 +46,22 @@ async function refreshPip(ref: React.RefObject<HTMLElement>) {
 export default function PipContent() {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { floor, floorMemo, continuous, fatalStrike } = useWalkthrough(
-    ({ floor, floorMemo, continuous, fatalStrike }) => ({
-      floor,
-      floorMemo,
-      continuous,
-      fatalStrike,
-    }),
-  );
+  const { floor, floorMemo, nextContinuous, nextFatalStrike, isSynchronized } =
+    useWalkthrough(
+      ({
+        floor,
+        floorMemo,
+        nextContinuous,
+        nextFatalStrike,
+        isSynchronized,
+      }) => ({
+        floor,
+        floorMemo,
+        nextContinuous,
+        nextFatalStrike,
+        isSynchronized,
+      }),
+    );
 
   useEffect(() => {
     refreshPip(containerRef);
@@ -62,16 +71,18 @@ export default function PipContent() {
     <>
       <div className={`${themeClass} ${container}`} ref={containerRef}>
         <h1 className={`${header}`}>{floor}층</h1>
-        <div className={`${cooldownBox}`}>
+        <div
+          className={`${cooldownBox} ${
+            isSynchronized() ? cooldownBoxBlink : ''
+          }`}
+        >
           <CooldownIndicator
             iconUrl={fatalStrikeIcon}
-            lastActivated={fatalStrike}
-            cooldown={30}
+            cooldownFn={nextFatalStrike}
           />
           <CooldownIndicator
             iconUrl={continuousIcon}
-            lastActivated={continuous}
-            cooldown={12}
+            cooldownFn={nextContinuous}
           />
         </div>
         <div className={`${memoBox}`}>

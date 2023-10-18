@@ -6,10 +6,12 @@ import {
   useState,
 } from 'react';
 
-import Detector from './Detector';
-import { selectWalkthroughHooks, useWalkthrough } from '@store/walkthrough';
 import { useOpencv } from '@hooks/useOpencv';
 import { useTemplate } from '@hooks/useTemplate';
+
+import { selectWalkthroughHooks, useWalkthrough } from '@store/walkthrough';
+
+import Detector from './Detector';
 
 const DetectorContext = createContext<Detector | null>(null);
 

@@ -29,10 +29,14 @@ export const cooldownBox = style({
   padding: vars.space.medium,
   borderRadius: vars.border.radius,
 
-  backgroundColor: vars.color.memoBg,
+  backgroundColor: vars.color.boxBg,
   display: 'flex',
   justifyContent: 'space-evenly',
   gap: vars.space.medium,
+});
+
+export const cooldownBoxBlink = style({
+  backgroundColor: vars.color.darkBoxBg,
 });
 
 export const memoBox = style({
@@ -40,7 +44,7 @@ export const memoBox = style({
   borderRadius: vars.border.radius,
 
   aspectRatio: '1 / 1',
-  backgroundColor: vars.color.memoBg,
+  backgroundColor: vars.color.boxBg,
   display: 'flex',
   flexDirection: 'column',
   placeItems: 'center',

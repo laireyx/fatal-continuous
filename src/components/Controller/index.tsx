@@ -6,10 +6,10 @@ import { faWindowMaximize } from '@fortawesome/free-solid-svg-icons/faWindowMaxi
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useUi } from '@store/ui';
+import { useDetector } from '@utils/detect/DetectProvider';
 import pipElements from '@utils/PipElements';
 
 import { buttonPanel, iconButton } from './index.css';
-import { useDetector } from '@utils/detect/DetectProvider';
 
 function Controller() {
   const { setMemoOpen } = useUi();

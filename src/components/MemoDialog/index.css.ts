@@ -99,7 +99,7 @@ export const memoArea = style({
   height: vars.sizing.dial.wrapperHeight,
   aspectRatio: '1 / 1',
 
-  backgroundColor: vars.color.memoBg,
+  backgroundColor: vars.color.boxBg,
   padding: vars.space.large,
 
   fontWeight: 'bold',

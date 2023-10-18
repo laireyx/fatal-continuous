@@ -23,6 +23,15 @@ interface WalkthroughStore {
 
   continuousActivated: () => void;
   fatalStrikeActivated: () => void;
+
+  nextContinuous: () => number;
+  nextFatalStrike: () => number;
+
+  isSynchronized: () => boolean;
+}
+
+function calculateCooldown(lastActivated: number, cooldown: number) {
+  return Math.max(lastActivated + cooldown * 1000 - Date.now(), 0);
 }
 
 const useWalkthrough = create<WalkthroughStore>((set, get) => ({
@@ -78,6 +87,25 @@ const useWalkthrough = create<WalkthroughStore>((set, get) => ({
     if (Date.now() - fatalStrike > 25 * 1000) {
       set({ fatalStrike: Date.now() });
     }
+  },
+
+  nextContinuous: () => {
+    const { continuous } = get();
+    return calculateCooldown(continuous, 12);
+  },
+
+  nextFatalStrike: () => {
+    const { fatalStrike } = get();
+    return calculateCooldown(fatalStrike, 30);
+  },
+
+  isSynchronized: () => {
+    const { nextContinuous, nextFatalStrike } = get();
+
+    return (
+      nextFatalStrike() <= nextContinuous() &&
+      nextContinuous() < nextFatalStrike() + 3000
+    );
   },
 }));
 

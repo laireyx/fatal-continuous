@@ -5,17 +5,16 @@ import { setTimeout } from 'worker-timers';
 import { cooldownText, cooldownTextImminent, indicator } from './index.css';
 type CooldownIndicatorProps = {
   iconUrl: string;
-  lastActivated: number;
-  cooldown: number;
+  cooldownFn: () => number;
 };
 
 export default function CooldownIndicator({
   iconUrl,
-  lastActivated,
-  cooldown,
+  cooldownFn,
 }: CooldownIndicatorProps) {
   const [now, setNow] = useState(Date.now());
-  const cooldownMs = Math.max(lastActivated + cooldown * 1000 - now, 0);
+
+  const cooldownMs = cooldownFn();
   const cooldownSec = Math.floor(cooldownMs / 1000);
 
   useEffect(() => {
@@ -28,7 +27,7 @@ export default function CooldownIndicator({
       <img src={iconUrl} />
       <span
         className={`${cooldownText} ${
-          0 < cooldownMs && cooldownMs < 3 ? cooldownTextImminent : ''
+          0 < cooldownMs && cooldownMs < 3000 ? cooldownTextImminent : ''
         }`}
       >
         {cooldownSec}s
