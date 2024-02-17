@@ -18,7 +18,7 @@ export default function CooldownIndicator({
   const cooldownSec = Math.floor(cooldownMs / 1000);
 
   useEffect(() => {
-    // Force re-render cooldown icon
+    // Force re-rendering this element
     setTimeout(() => setNow(Date.now()), 100);
   }, [now]);
 

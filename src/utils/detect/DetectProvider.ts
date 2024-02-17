@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react';
 
-import { useOpencv } from '@hooks/useOpencv';
+import { useOpencvSuspense } from '@hooks/useOpencv';
 import { useTemplate } from '@hooks/useTemplate';
 
 import { useWalkthrough } from '@store/walkthrough';
@@ -35,9 +35,10 @@ export function useDetector() {
     setIsCapturing(true);
   }, [detector, setIsCapturing]);
 
-  useOpencv();
+  useOpencvSuspense();
   useTemplate(detector);
 
+  // Use double-checking because of `React.StrictMode`
   useEffect(() => {
     if (!isCapturing) return;
 

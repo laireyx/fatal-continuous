@@ -35,6 +35,7 @@ export default function MemoDialog() {
     save();
   }, [setFloorMemo, save, selectedFloor, writing]);
 
+  // Change selected floor
   const changeFloor = useCallback(
     (toFloor: number) => {
       commitMemo();
@@ -49,18 +50,20 @@ export default function MemoDialog() {
     [commitMemo, setSelectedFloor],
   );
 
-  const refreshMemo = useCallback(() => {
+  const clearMemo = useCallback(() => {
     for (let i = 0; i <= 100; i++) {
       setFloorMemo(i, []);
     }
     save();
   }, [setFloorMemo, save]);
 
-  const closeMemo = useCallback(() => {
+  // Close dialog
+  const closeDialog = useCallback(() => {
     commitMemo();
     setMemoOpen(false);
   }, [commitMemo, setMemoOpen]);
 
+  // Apply existing memo to the editor
   useEffect(
     () => setWriting(floorMemo[selectedFloor].join('\n')),
     [selectedFloor, floorMemo],
@@ -85,12 +88,12 @@ export default function MemoDialog() {
           <FontAwesomeIcon
             icon={faTrashAlt}
             className={`${icon}`}
-            onClick={refreshMemo}
+            onClick={clearMemo}
           />
           <FontAwesomeIcon
             icon={faClose}
             className={`${icon}`}
-            onClick={closeMemo}
+            onClick={closeDialog}
           />
         </div>
         <div className={`${memoEditor}`}>

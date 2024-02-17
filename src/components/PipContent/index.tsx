@@ -29,7 +29,6 @@ async function refreshPip(ref: React.RefObject<HTMLElement>) {
     await html2canvas(ref.current, {
       x: 4,
       y: 4,
-      ignoreElements: (element) => element.tagName.toLowerCase() === 'dialog',
       canvas: canvas as unknown as HTMLCanvasElement,
       scale: 1,
       logging: false,
@@ -38,6 +37,7 @@ async function refreshPip(ref: React.RefObject<HTMLElement>) {
     pipElements.update(canvas);
   }
 
+  // 24fps
   setTimeout(() => refreshPip(ref), 42);
 }
 

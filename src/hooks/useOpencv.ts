@@ -4,6 +4,6 @@ const pendingPromise = new Promise<void>((resolve) => {
   cv.onRuntimeInitialized = resolve;
 });
 
-export function useOpencv() {
+export function useOpencvSuspense() {
   if (typeof cv.Mat !== 'function') throw pendingPromise;
 }
