@@ -1,10 +1,11 @@
-import { Suspense } from 'react';
+import { Suspense, lazy } from 'react';
 
-import Controller from '@components/Controller';
-import LoadingFallback from '@components/LoadingFallback';
-import MemoDialog from '@components/MemoDialog';
-import PipContent from '@components/PipContent';
 import { ThemeContainer } from '@components/ThemeContainer';
+
+const Controller = lazy(() => import('@components/Controller'));
+const LoadingFallback = lazy(() => import('@components/LoadingFallback'));
+const MemoDialog = lazy(() => import('@components/MemoDialog'));
+const PipContent = lazy(() => import('@components/PipContent'));
 
 function App() {
   return (
