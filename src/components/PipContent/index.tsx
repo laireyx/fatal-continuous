@@ -46,22 +46,14 @@ async function refreshPip(ref: React.RefObject<HTMLElement>) {
 export default function PipContent() {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { floor, floorMemo, nextContinuous, nextFatalStrike, isSynchronized } =
-    useWalkthrough(
-      ({
-        floor,
-        floorMemo,
-        nextContinuous,
-        nextFatalStrike,
-        isSynchronized,
-      }) => ({
-        floor,
-        floorMemo,
-        nextContinuous,
-        nextFatalStrike,
-        isSynchronized,
-      }),
-    );
+  const {
+    floor,
+    floorMemo,
+    killCount,
+    nextContinuous,
+    nextFatalStrike,
+    isSynchronized,
+  } = useWalkthrough();
 
   useEffect(() => {
     refreshPip(containerRef);
@@ -70,7 +62,9 @@ export default function PipContent() {
   return (
     <>
       <div className={`${themeClass} ${container}`} ref={containerRef}>
-        <h1 className={`${header}`}>{floor}층</h1>
+        <h1 className={`${header}`}>
+          {floor}층{31 <= floor && floor < 40 && ` - ${killCount + 1}`}
+        </h1>
         <div
           className={`${cooldownBox} ${
             isSynchronized() ? cooldownBoxBlink : ''

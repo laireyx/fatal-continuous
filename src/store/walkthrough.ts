@@ -6,6 +6,7 @@ type ContinuousState = 2 | 1 | 0;
 
 interface WalkthroughStore {
   floor: number;
+  killCount: number;
   state: PlayState;
 
   continuous: number;
@@ -36,6 +37,7 @@ function calculateCooldown(lastActivated: number, cooldown: number) {
 
 const useWalkthrough = create<WalkthroughStore>((set, get) => ({
   floor: 0,
+  killCount: 0,
   state: 'end',
 
   continuous: -1,
@@ -59,16 +61,30 @@ const useWalkthrough = create<WalkthroughStore>((set, get) => ({
     set({ floorMemo });
   },
 
-  floorStart: () => {
-    const { state } = get();
+  floorStart: () =>
+    set(({ state, floor, killCount }) => {
+      // Alreay Started
+      if (state === 'end') {
+        let mobCount = 1;
 
-    // Alreay Started
-    if (state === 'end') {
-      set(({ floor }) => ({ state: 'start', floor: floor + 1 }));
-    }
+        // There could be multiple mobs in a single floor!
+        if (31 <= floor && floor < 38) {
+          mobCount = 2;
+        } else if (38 <= floor && floor < 40) {
+          mobCount = 3;
+        }
 
-    set({ state: 'attacking' });
-  },
+        killCount++;
+
+        if (killCount === mobCount) {
+          return { state: 'start', floor: floor + 1, killCount: 0 };
+        } else {
+          return { state: 'start', killCount };
+        }
+      }
+
+      return { state: 'attacking' };
+    }),
   floorEnd: () => set({ state: 'end' }),
 
   continuousActivated: () => {
