@@ -19,8 +19,6 @@ import {
 import continuousIcon from '../../assets/continuous.png';
 import fatalStrikeIcon from '../../assets/fatal-strike.png';
 
-import { themeClass } from '@theme';
-
 async function refreshPip(ref: React.RefObject<HTMLElement>) {
   if (ref.current) {
     const canvas = new OffscreenCanvas(
@@ -61,9 +59,10 @@ export default function PipContent() {
 
   return (
     <>
-      <div className={`${themeClass} ${container}`} ref={containerRef}>
+      <div className={`${container}`} ref={containerRef}>
         <h1 className={`${header}`}>
-          {floor}층{31 <= floor && floor < 40 && ` - ${killCount + 1}`}
+          {floor}
+          {31 <= floor && floor < 40 && ` - ${killCount + 1}`}층
         </h1>
         <div
           className={`${cooldownBox} ${
