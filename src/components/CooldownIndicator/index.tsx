@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 
 import { setTimeout } from 'worker-timers';
 
+import runtimeParams from '@utils/runtimeParams';
+
 import { cooldownText, cooldownTextImminent, indicator } from './index.css';
 type CooldownIndicatorProps = {
   iconUrl: string;
@@ -19,7 +21,7 @@ export default function CooldownIndicator({
 
   useEffect(() => {
     // Force re-rendering this element
-    setTimeout(() => setNow(Date.now()), 100);
+    setTimeout(() => setNow(Date.now()), runtimeParams.VIEW_FPS);
   }, [now]);
 
   return (

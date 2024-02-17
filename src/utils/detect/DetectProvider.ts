@@ -10,6 +10,7 @@ import { useOpencvSuspense } from '@hooks/useOpencv';
 import { useTemplate } from '@hooks/useTemplate';
 
 import { useWalkthrough } from '@store/walkthrough';
+import runtimeParams from '@utils/runtimeParams';
 
 import Detector from './Detector';
 
@@ -66,7 +67,7 @@ export function useDetector() {
         }
       }
 
-      if (running) setTimeout(handler, 250);
+      if (running) setTimeout(handler, runtimeParams.CAPTURE_FPS);
     };
 
     handler();

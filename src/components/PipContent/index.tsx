@@ -6,6 +6,7 @@ import { setTimeout } from 'worker-timers';
 import CooldownIndicator from '@components/CooldownIndicator';
 import { useWalkthrough } from '@store/walkthrough';
 import pipElements from '@utils/PipElements';
+import runtimeParams from '@utils/runtimeParams';
 
 import {
   container,
@@ -37,8 +38,7 @@ async function refreshPip(ref: React.RefObject<HTMLElement>) {
     pipElements.update(canvas);
   }
 
-  // 24fps
-  setTimeout(() => refreshPip(ref), 42);
+  setTimeout(() => refreshPip(ref), runtimeParams.VIEW_FPS);
 }
 
 export default function PipContent() {
