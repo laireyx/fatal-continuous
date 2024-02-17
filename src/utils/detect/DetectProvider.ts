@@ -9,7 +9,7 @@ import {
 import { useOpencv } from '@hooks/useOpencv';
 import { useTemplate } from '@hooks/useTemplate';
 
-import { selectWalkthroughHooks, useWalkthrough } from '@store/walkthrough';
+import { useWalkthrough } from '@store/walkthrough';
 
 import Detector from './Detector';
 
@@ -25,7 +25,7 @@ export function useDetector() {
     throw new Error('useDetector() failed: cannot retrieve detector instance');
 
   const { floorStart, floorEnd, continuousActivated, fatalStrikeActivated } =
-    useWalkthrough(selectWalkthroughHooks);
+    useWalkthrough();
 
   const startDetect = useCallback(async () => {
     if (!detector) return;

@@ -133,15 +133,3 @@ const useWalkthrough = create<WalkthroughStore>((set, get) => ({
 })();
 
 export { useWalkthrough };
-
-export const selectWalkthroughHooks = ({
-  floorStart,
-  floorEnd,
-  continuousActivated,
-  fatalStrikeActivated,
-}: WalkthroughStore) => ({
-  floorStart,
-  floorEnd,
-  continuousActivated,
-  fatalStrikeActivated,
-});
