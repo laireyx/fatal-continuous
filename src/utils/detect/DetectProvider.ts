@@ -46,7 +46,9 @@ export function useDetector() {
     const handler = () => {
       const result = detector.detect();
 
-      for (const { key, matchCount } of result) {
+      if (result) {
+        const { key, matchCount } = result;
+
         switch (key) {
           case 'floorStart':
             floorStart();

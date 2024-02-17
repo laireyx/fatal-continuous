@@ -12,12 +12,10 @@ type DetectTemplate = {
   detectAll: boolean;
 };
 
-type DetectedItem = {
+type DetectResult = {
   key: string;
   matchCount: number;
 };
-
-type DetectResult = DetectedItem[];
 
 export default class Detector {
   private templates: Map<string, DetectTemplate> = new Map();
@@ -69,10 +67,10 @@ export default class Detector {
     });
   }
 
-  detect(): DetectResult {
+  detect(): DetectResult | null {
     const shot = this.capture.takeCapture();
 
-    const detectResult: DetectResult = [];
+    let detectResult: DetectResult | null = null;
     let src: cv.Mat | null = null;
 
     let prevRoiRect: cv.Rect = new cv.Rect();
@@ -85,6 +83,8 @@ export default class Detector {
         ...(roi(shot.size()) ?? [0, 0, shot.cols, shot.rows]),
       );
 
+      // Check if a ROI is same as the last detection.
+      // If so, reuse `src` sub-matrix. If not, recreate it.
       if (
         !(
           src &&
@@ -100,31 +100,26 @@ export default class Detector {
       }
 
       const result = new cv.Mat();
-
       cv.matchTemplate(src, template, result, cv.TM_CCOEFF_NORMED);
-
-      const dst = new cv.Mat();
-      cv.threshold(result, dst, this.threshold, 0, cv.THRESH_TOZERO);
 
       let matchCount = 0;
 
-      let { maxVal, maxLoc } = cv.minMaxLoc(dst);
+      let { maxVal, maxLoc } = cv.minMaxLoc(result);
 
       while (maxVal > this.threshold) {
-        dst.floatPtr(maxLoc.y, maxLoc.x)[0] = 0;
+        result.floatPtr(maxLoc.y, maxLoc.x)[0] = 0;
         matchCount++;
 
         if (!detectAll) break;
-        ({ maxVal, maxLoc } = cv.minMaxLoc(dst));
+        ({ maxVal, maxLoc } = cv.minMaxLoc(result));
       }
 
       if (matchCount > 0)
-        detectResult.push({
+        detectResult = {
           key,
           matchCount,
-        });
+        };
 
-      dst.delete();
       result.delete();
     }
 
