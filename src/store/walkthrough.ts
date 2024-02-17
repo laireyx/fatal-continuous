@@ -52,14 +52,13 @@ const useWalkthrough = create<WalkthroughStore>((set, get) => ({
     localforage.setItem('walkthrough', floorMemo);
   },
 
-  setFloorMemo: (floor: number, memo: string[]) => {
-    const { floorMemo: oldMemo } = get();
-    const floorMemo = oldMemo.slice();
+  setFloorMemo: (floor: number, memo: string[]) =>
+    set(({ floorMemo }) => {
+      floorMemo = floorMemo.slice();
+      floorMemo[floor] = memo;
 
-    floorMemo[floor] = memo;
-
-    set({ floorMemo });
-  },
+      return { floorMemo };
+    }),
 
   floorStart: () =>
     set(({ state, floor, killCount }) => {
@@ -77,33 +76,32 @@ const useWalkthrough = create<WalkthroughStore>((set, get) => ({
         killCount++;
 
         if (killCount === mobCount) {
-          return { state: 'start', floor: floor + 1, killCount: 0 };
-        } else {
-          return { state: 'start', killCount };
+          floor++;
+          killCount = 0;
         }
+
+        return { state: 'start', floor, killCount };
       }
 
       return { state: 'attacking' };
     }),
   floorEnd: () => set({ state: 'end' }),
 
-  continuousActivated: () => {
-    const { continuous } = get();
+  continuousActivated: () =>
+    set(({ continuous }) => {
+      // Continuous Ring is not affected by Server delay
+      // Anyway we need some room for capturing & processing delay
+      if (Date.now() - continuous > 10 * 1000) {
+        return { continuous: Date.now() };
+      } else return {};
+    }),
 
-    // Continuous Ring is not affected by Server delay
-    // Anyway we need some room for capturing & processing delay
-    if (Date.now() - continuous > 10 * 1000) {
-      set({ continuous: Date.now() });
-    }
-  },
-
-  fatalStrikeActivated: () => {
-    const { fatalStrike } = get();
-
-    if (Date.now() - fatalStrike > 25 * 1000) {
-      set({ fatalStrike: Date.now() });
-    }
-  },
+  fatalStrikeActivated: () =>
+    set(({ fatalStrike }) => {
+      if (Date.now() - fatalStrike > 25 * 1000) {
+        return { fatalStrike: Date.now() };
+      } else return {};
+    }),
 
   nextContinuous: () => {
     const { continuous } = get();
@@ -115,12 +113,13 @@ const useWalkthrough = create<WalkthroughStore>((set, get) => ({
     return calculateCooldown(fatalStrike, 30);
   },
 
+  // Returns true if next continuous ring and fatal strike can be synchronized.
   isSynchronized: () => {
     const { nextContinuous, nextFatalStrike } = get();
 
     return (
-      nextFatalStrike() <= nextContinuous() &&
-      nextContinuous() < nextFatalStrike() + 3000
+      nextFatalStrike() <= nextContinuous() + 100 &&
+      nextContinuous() < nextFatalStrike() + 2500
     );
   },
 }));
